@@ -530,7 +530,7 @@ class FenetreJeu extends JFrame implements ActionListener {
     // ************************************************************************	
 
     private void IA_jouer_un_coup() {
-
+        
         if (!terminer) {
 
             boolean ok = false;
@@ -540,13 +540,14 @@ class FenetreJeu extends JFrame implements ActionListener {
 
             //************** Section à modifier commence ici ************* XXX
 
-            while (!ok) {
+            MoteurInference mi = MoteurInference.getInstance();
+            mi.majCarte(ConnaissanceAgent);
+            int[] coup = mi.calculCoup();
 
-                int pos_x = getRandomNum(0, 9);
-                int pos_y = getRandomNum(0, 9);
+                int pos_x = coup[0];
+                int pos_y = coup[1];
 
                 ok = jouer(pos_x, pos_y);
-            }
 
             //************** Section à modifier termine ici *************
 

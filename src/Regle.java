@@ -10,13 +10,34 @@ public class Regle {
         
     }
     
+    /**
+     * @param fait
+     * @return
+     * Permet de savoir si un fait correspond à un prémisse d’une règle.
+     */
     public boolean satisfaitCondition(String fait) {
-        //TODO permet de savoir si un fait correspond à un prémisse d’une règle.
-        return false;
+        for(String s : premisses) {
+            if(fait.equals(s))
+                return false;
+        }
+        return true;
     }
     
+    /**
+     * @param faits
+     * @return
+     * Permet de savoir si un ensemble de faits satisfait tous les prémisses d’une règle. 
+     */
     public boolean satisfaitConditions(List<String> faits) {
-        //TODO permet de savoir si un ensemble de faits satisfait tous les prémisses d’une règle.
-        return false;
+        for(String s : premisses) {
+            boolean satisfied = false;
+            for(int i = 0; i < faits.size() && !satisfied; ++i) {
+                if(s.equals(faits.get(i)))
+                    satisfied = true;
+            }
+            if(!satisfied)
+                return false;
+        }
+        return true;
     }
 }
