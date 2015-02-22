@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -7,7 +8,16 @@ public class Regle {
     private List<String> consequences;
 
     public Regle() {
-        
+        premisses = new ArrayList<>();
+        consequences = new ArrayList<>();
+    }
+    
+    public void addPremisse(String fait){
+    	premisses.add(fait);
+    }
+    
+    public void addConsequence(String conseq){
+    	consequences.add(conseq);
     }
     
     /**
