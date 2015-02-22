@@ -2,6 +2,9 @@ import java.util.List;
 
 
 public class Regle {
+    
+    private List<String> premisses;
+    private List<String> consequences;
 
     public Regle() {
         

@@ -2,9 +2,20 @@ import java.util.List;
 
 public class MoteurInference {
 
-    List<Regle> regles;
-
-    public MoteurInference() {
+    private MoteurInference MI;
+    
+    private List<Regle> regles;
+    private List<String> faits;
+    private char[][] connaissance;
+    
+    public MoteurInference getInstance() {
+        if(MI == null) {
+            MI = new MoteurInference();
+        }
+        return MI;
+    }
+    
+    private MoteurInference() {
         //TODO instancier les règles à partir du fichier Battleship.rules
     }
 
@@ -13,7 +24,7 @@ public class MoteurInference {
         return false;
     }
 
-    public int[][] calculCoup() {
+    public int[] calculCoup() {
         //TODO contient toute la logique de décision du moteur d’inférence.
         /*
         Il utilise un chainage avant simple pour décider quel sera le coup suivant à réaliser en
@@ -27,5 +38,13 @@ public class MoteurInference {
         décision.
          */
         return null;
+    }
+    
+    public void majConnaissance(char[][] map) {
+        //TODO mettre à jour les connaissances. Nous connaissons peut-être plus de chose que la carte présente ?
+    }
+    
+    private void appliquerRegle(Regle r) {
+        //TODO maj faits
     }
 }
