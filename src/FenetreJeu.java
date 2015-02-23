@@ -547,7 +547,7 @@ class FenetreJeu extends JFrame implements ActionListener {
                 int pos_x = coup[0];
                 int pos_y = coup[1];
 
-                ok = jouer(pos_x, pos_y);
+                jouer(pos_x, pos_y);
 
             //************** Section à modifier termine ici *************
 

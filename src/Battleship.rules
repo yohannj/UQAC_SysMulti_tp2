@@ -1,0 +1,20 @@
+listeFait_est_nulle => jouer [3,2]
+onMap(x;y) => case existe
+case(x;y) = 'f' => bateau(x;y)
+case(x;y) = 'g' => bateau(x;y)
+case(x;y) = 'h' => bateau(x;y)
+case(x;y) = 'i' => bateau(x;y)
+case(x;y) = 'j' => bateau(x;y)
+case(x;y) = 'o' => non_bateau(x;y)
+case(x;y) = 'v' => inconnu
+##############Coup de base###################
+bateau(dernierX;dernierY), droite = inconnu, gauche = inconnu, haut = inconnu, bas = inconnu, droite = existe => jouer droite
+bateau(dernierX;dernierY), gauche = inconnu, haut = inconnu, bas = inconnu, droite = non_bateau(x;y) ou droite = bateau(x;y)_different, gauche = existe => jouer gauche
+bateau(dernierX;dernierY), haut = inconnu, bas = inconnu, droite = non_bateau(x;y) ou droite = bateau(x;y)_different, gauche = non_bateau(x;y) ou gauche = bateau(x;y)_different, haut = existe => jouer haut
+bateau(dernierX;dernierY), bas = inconnu, droite = non_bateau(x;y) ou droite = bateau(x;y)_different, gauche = non_bateau(x;y) ou gauche = bateau(x;y)_different , haut = non_bateau(x;y) ou haut = bateau(x;y)_different, bas = existe => jouer bas
+########traque à gauche############
+bateau(dernierX;dernierY), droite = non_bateau(x;y) ou droite = bateau(x;y)_different, gauche = meme_bateau(x;y), last_gauche = existe => jouer last_gauche
+########traque en haut############
+bateau(dernierX;dernierY), droite = non_bateau(x;y) ou droite = bateau(x;y)_different, gauche = non_bateau(x;y) ou gauche = bateau(x;y)_different, haut = meme_bateau(x;y), last_haut existe => jouer last_haut
+########traque en bas############
+bateau(dernierX;dernierY), droite = non_bateau(x;y) ou droite = bateau(x;y)_different, gauche = non_bateau(x;y) ou gauche = bateau(x;y)_different, haut = non_bateau(x;y) ou haut = bateau(x;y)_different, bas = meme_bateau(x;y), last_bas existe => jouer last_bas
