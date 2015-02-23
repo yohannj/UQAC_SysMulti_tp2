@@ -42,26 +42,26 @@ public class MoteurInference {
      */
     public int[] calculCoup() {
         //1. Obtenir les faits initiaux
-        initFaits(); 
+        initFaits();
 
-        Set<Regle> regles_non_marquees = new HashSet<Regle>(regles);
+        Set<Regle> regles_non_marquees = new HashSet<Regle>(regles); //TODO faire une mise à jouer des règles pour remplacer tout les dernierX, dernierX+1, dernierX-1, dernierY, dernierY+1, dernierY-1, dernierType
         termine = false;
 
         //2. Tant que (Pas terminé et il reste au moins une règle non marquée) faire
-        while (!termine && !regles_non_marquees.isEmpty()) { 
+        while (!termine && !regles_non_marquees.isEmpty()) {
             Set<Regle> regle_applicable = new HashSet<Regle>();
 
             //2.1 Sélectionner les règles applicables : celles non marquées
             for (Iterator<Regle> i = regles_non_marquees.iterator(); i.hasNext();) {
                 Regle r = i.next();
-                
+
                 //2.1 Sélectionner les règles applicables : si une des règles est en contradiction, marquer la règle
-                if (enContradiction(r)) { 
+                if (enContradiction(r)) {
                     regles_non_marquees.remove(r);
                 } else {
-                    
+
                     //2.1 Sélectionner les règles applicables : celles dont les conditions existent dans la base de faits
-                    if (r.satisfaitConditions(faits)) { 
+                    if (r.satisfaitConditions(faits)) {
                         regle_applicable.add(r);
                     }
                 }
@@ -89,12 +89,12 @@ public class MoteurInference {
                 dernier_coup = new Point(x, y);
             }
         }
-        
+
         //FIXME remove this if once MoteurInference is functionnal
-        if(dernier_coup == null) {
-            dernier_coup = new Point(0,0);
+        if (dernier_coup == null) {
+            dernier_coup = new Point(0, 0);
         }
-        
+
         return new int[] { dernier_coup.x, dernier_coup.y };
     }
 
@@ -107,10 +107,18 @@ public class MoteurInference {
     }
 
     private void appliquerRegle(Regle r) {
-        //TODO Rajout des conséquences dans les faits. De plus, si l'une des conséquences est "jouer(x,y)" alors mettre le boolean termine à true
-        for(String s : r.getConsequence()) {
-            if(s.matches("jouer(.*,.*)")) {
+        for (String s : r.getConsequence()) {
+            if (s.contains("jouer")) {
                 termine = true;
+                if (s.matches("jouer(.*,.*)")) {
+                    //TODO Ajouter le fait jouer(x,y) dans les faits.
+                } else if (s.contains("last")){
+                    //TODO On est dans le cas jouer(last_gauche) || jouer(last_haut) || jouer(last_droite). Déterminer (à l'aide d'une nouvelle fonction ?) x,y pour pouvoir ajouter jouer(x,y) dans les faits.
+                } else {
+                    //TODO On est dans le cas jouer(aleatoire). Déterminer x,y depuis un fait "inconnu(x,y)" pour pouvoir ajouter jouer(x,y) dans les faits.
+                }
+            } else {
+                //TODO Rajout des conséquences dans les faits.
             }
         }
     }
@@ -119,7 +127,7 @@ public class MoteurInference {
      * Initialise la base de faits
      */
     private void initFaits() {
-        //TODO Retravailler
+        //TODO Retravailler, créer tout les faits de type : case(x;y) = ...
         if (dernier_coup != null) {
             for (Iterator<String> i = faits.iterator(); i.hasNext();) {
                 String fait = i.next();
@@ -131,12 +139,6 @@ public class MoteurInference {
                     + carte[dernier_coup.x][dernier_coup.y] + "'");
             faits.add("case(dernierX,dernierY)='"
                     + carte[dernier_coup.x][dernier_coup.y] + "'");
-        }
-
-        if (faits.isEmpty()) {
-            faits.add("listeFait_est_nulle");
-        } else {
-            faits.remove("listeFait_est_nulle");
         }
     }
 
@@ -164,7 +166,8 @@ public class MoteurInference {
                     String[] ligneSpliter = ligne.split("=>");
                     String listeFait = ligneSpliter[0].replace(" ", "");
                     for (String s : listeFait.split(",")) {
-                        regle.addPremisse(s);
+                        if (!s.equals("")) //Ajouter pour permettre un coup aléatoire
+                            regle.addPremisse(s);
                     }
                     String listeConseq = ligneSpliter[1].replace(" ", "");
                     for (String s : listeConseq.split(",")) {
