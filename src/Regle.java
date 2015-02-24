@@ -9,8 +9,8 @@ public class Regle {
     private List<String> consequences;
 
     public Regle() {
-        premisses = new ArrayList<>();
-        consequences = new ArrayList<>();
+        premisses = new ArrayList<String>();
+        consequences = new ArrayList<String>();
     }
 
     public void addPremisse(String fait) {
@@ -55,5 +55,21 @@ public class Regle {
                 return false;
         }
         return true;
+    }
+    
+    /**
+     * @param dernierX
+     * @param dernierY
+     * Remplace toutes les occurences de "dernierX" et "dernierY" par leurs valeurs 
+     */
+    public void adapteAuDernierPoint(int dernierX, int dernierY) {
+        for(int i = 0; i < premisses.size(); ++i) {
+            premisses.set(i, premisses.get(i).replaceAll("dernierX", ""+dernierX));
+            premisses.set(i, premisses.get(i).replaceAll("dernierY", ""+dernierY));
+        }
+        for(int i = 0; i < premisses.size(); ++i) {
+            consequences.set(i, consequences.get(i).replaceAll("dernierX", ""+dernierX));
+            consequences.set(i, consequences.get(i).replaceAll("dernierY", ""+dernierY));
+        }
     }
 }
