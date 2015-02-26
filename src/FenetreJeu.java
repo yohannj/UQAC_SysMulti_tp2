@@ -541,7 +541,7 @@ class FenetreJeu extends JFrame implements ActionListener {
             //************** Section à modifier commence ici ************* XXX
 
             MoteurInference mi = MoteurInference.getInstance();
-            mi.majCarte(ConnaissanceAgent);
+            mi.majCarteEtDernierPoint(ConnaissanceAgent);
             int[] coup = mi.calculCoup();
 
                 int pos_x = coup[0];

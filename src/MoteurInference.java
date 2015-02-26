@@ -5,12 +5,13 @@ import java.util.*;
 public class MoteurInference {
 
     private static MoteurInference MI;
-    private static final String FILE_NAME = "src/Battleship.rules";
-    private Set<Regle> regles;
+    private final String FILE_NAME = "src/Battleship.rules";
+    private List<Regle> regles;
     private Set<String> faits;
     private char[][] carte;
 
     private Point dernier_coup;
+    private Point avant_dernier_coup;
     private boolean termine;
 
     public static MoteurInference getInstance() {
@@ -24,6 +25,7 @@ public class MoteurInference {
      * Constructeur, instancie la liste de règles à partir du fichier Battleship.rules
      */
     private MoteurInference() {
+        dernier_coup = new Point(-1, -1);
         regles = parser(FILE_NAME);
         faits = new HashSet<String>();
     }
@@ -44,12 +46,14 @@ public class MoteurInference {
         //1. Obtenir les faits initiaux
         initFaits();
 
-        Set<Regle> regles_non_marquees = new HashSet<Regle>(regles); //TODO faire une mise à jouer des règles pour remplacer tout les dernierX, dernierX+1, dernierX-1, dernierY, dernierY+1, dernierY-1, dernierType
+        List<Regle> regles_non_marquees = new ArrayList<Regle>(regles);
+        regles_non_marquees.parallelStream()
+                .forEach(r -> r.adapteAuDernierPoint(dernier_coup.x, dernier_coup.y));
         termine = false;
 
         //2. Tant que (Pas terminé et il reste au moins une règle non marquée) faire
         while (!termine && !regles_non_marquees.isEmpty()) {
-            Set<Regle> regle_applicable = new HashSet<Regle>();
+            List<Regle> regle_applicable = new ArrayList<Regle>();
 
             //2.1 Sélectionner les règles applicables : celles non marquées
             for (Iterator<Regle> i = regles_non_marquees.iterator(); i.hasNext();) {
@@ -68,7 +72,7 @@ public class MoteurInference {
             }
 
             //2.2 Choisir la règle à appliquer (arbitrairement, ou autre)
-            Regle regle_appliquee = regle_applicable.iterator().next();
+            Regle regle_appliquee = regle_applicable.get(0);
 
             //2.3 Appliquer la règle: ajouter les conclusions à la base de faits
             appliquerRegle(regle_appliquee);
@@ -86,6 +90,7 @@ public class MoteurInference {
             if (fait.contains("jouer")) {
                 int x = Integer.parseInt(fait.split(";")[0].split("(")[1]);
                 int y = Integer.parseInt(fait.split(";")[1].split(")")[0]);
+                avant_dernier_coup = dernier_coup;
                 dernier_coup = new Point(x, y);
             }
         }
@@ -100,20 +105,28 @@ public class MoteurInference {
 
     /**
      * @param carte
-     * Mets à jour les informations ocnnus sur la carte
+     * Mets à jour les informations connus sur la carte
      */
-    public void majCarte(char[][] carte) {
+    public void majCarteEtDernierPoint(char[][] carte) {
         this.carte = carte;
+        if(carte[dernier_coup.x][dernier_coup.y] == 'o' && carte[avant_dernier_coup.x][avant_dernier_coup.y] != 'o' && carte[avant_dernier_coup.x][avant_dernier_coup.y] != 'v') {
+            dernier_coup = avant_dernier_coup;
+        }
     }
 
+<<<<<<< HEAD
     private void appliquerRegle(Regle r,int x, int y, String t) {
     	int x_cible,y_cible;
     	int i = 1;
 		boolean trouv = false;
+=======
+    private void appliquerRegle(Regle r) { //Conseil : Utiliser javax.script.ScriptEngineManager et javax.script.ScriptEngine. (Attention ? ils renvoient un double, peut-être faire le passage en int) -> http://stackoverflow.com/questions/3422673/evaluating-a-math-expression-given-in-string-form
+>>>>>>> f19c7ede564baee8a70d0318fdff3a908f5d64b4
         for (String s : r.getConsequence()) {
             if (s.contains("jouer")) {
                 termine = true;
                 if (s.matches("jouer(.*;.*)")) {
+<<<<<<< HEAD
                     //TODO Ajouter le fait jouer(x,y) dans les faits.
                 	String chaine1 = s.substring(7, s.length()-1).split(";")[0];
                 	String chaine2 = s.substring(7, s.length()-1).split(";")[1].replace(")", "");
@@ -121,6 +134,10 @@ public class MoteurInference {
                 	y_cible =valeur_dep(chaine2);
                 	faits.add("jouer("+x_cible+";"+y_cible+")");
                 } else if (s.contains("last")){
+=======
+                    //TODO Ajouter le fait jouer(x,y) dans les faits. (Il ne faut plus de calcul dedans)
+                } else if (s.contains("last")) {
+>>>>>>> f19c7ede564baee8a70d0318fdff3a908f5d64b4
                     //TODO On est dans le cas jouer(last_gauche) || jouer(last_haut) || jouer(last_droite). Déterminer (à l'aide d'une nouvelle fonction ?) x,y pour pouvoir ajouter jouer(x,y) dans les faits.
                 	if(s.contains("gauche")){
                 		while(!trouv){
@@ -180,33 +197,28 @@ public class MoteurInference {
      * Initialise la base de faits
      */
     private void initFaits() {
-        //TODO Retravailler, créer tout les faits de type : case(x;y) = ...
-        if (dernier_coup != null) {
-            for (Iterator<String> i = faits.iterator(); i.hasNext();) {
-                String fait = i.next();
-                if (fait.contains("case(dernierX,dernierY)="))
-                    faits.remove(fait);
-            }
+        faits = new HashSet<String>();
 
-            faits.add("case(" + dernier_coup.x + "," + dernier_coup.y + "='"
-                    + carte[dernier_coup.x][dernier_coup.y] + "'");
-            faits.add("case(dernierX,dernierY)='"
-                    + carte[dernier_coup.x][dernier_coup.y] + "'");
+        for (int x = 0; x < carte.length; ++x) {
+            for (int y = 0; y < carte[0].length; ++y) {
+                faits.add("case(" + x + ";" + y + ")='" + carte[x][y] + "'");
+            }
         }
+
     }
 
     /**
      * @param r
      * @return Si la règle est en contradiction avec les faits, true
      */
-    private boolean enContradiction(Regle r) {
-        //TODO Compléter
+    private boolean enContradiction(Regle r) { //Conseil : Utiliser javax.script.ScriptEngineManager et javax.script.ScriptEngine. (Attention ? ils renvoient un double, peut-être faire le passage en int) -> http://stackoverflow.com/questions/3422673/evaluating-a-math-expression-given-in-string-form
+        //TODO Compléter en vérifiant les non_
         return false;
     }
 
-    private Set<Regle> parser(String filename) {
+    private List<Regle> parser(String filename) {
         File f = new File(filename);
-        Set<Regle> liste = new HashSet<>();
+        List<Regle> liste = new ArrayList<>();
         try {
             InputStream ips = new FileInputStream(f);
             InputStreamReader ipsr = new InputStreamReader(ips);
