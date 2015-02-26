@@ -51,23 +51,21 @@ public class Regle {
 
     /**
      * @param faits
-     * @return null si non satisfait. Sinon le Point(x;y) validant la règle, le Point n'est pas instancié s'il n'est pas nécessaire pour la lecture de la règle
+     * @return 
+     * Permet de savoir si un ensemble de faits satisfait tous les prémisses d’une règle. 
      */
-    public Point satisfaitConditions(Set<String> faits) {
-        Map<Point, Integer> nbPremissesValideesPar = new HashMap<Point, Integer>();
-
+    public boolean satisfaitConditions(Set<String> faits) {
         for (String s : premisses) {
-            for (Iterator<String> i = faits.iterator(); i.hasNext();) {
-                String fait = i.next();
-                List<Object> param = récupérerParamètreDuFait(fait);
-                if (s.equals(i.next())) {
-                    
-                }
+            boolean satisfied = false;
+            for (Iterator<String> i = faits.iterator(); !satisfied
+                    && i.hasNext();) {
+                if (s.equals(i.next()))
+                    satisfied = true;
             }
-            //if (!satisfied)
-              //  return null;
+            if (!satisfied)
+                return false;
         }
-        return null;
+        return true;
     }
 
     /**
@@ -90,25 +88,7 @@ public class Regle {
         }
     }
 
-    private List<Object> récupérerParamètreDuFait(String fait) {
-        List<Object> res = new ArrayList<Object>();
-        String[] faitSplit = fait.split(";");
-        int x = calcString(faitSplit[0].split("(")[1]);
-        int y;
-        String t = null;
-        if (faitSplit.length == 2) {
-            y = calcString(faitSplit[1].split(")")[0]);
-        } else {
-            y = calcString(faitSplit[1]);
-            t = faitSplit[2].split(")")[0];
-        }
-        res.add(x);
-        res.add(y);
-        res.add(t);
-        return res;
-    }
-
-    private int calcString(String s) {
+    private int calcString(String s) { //TODO utiliser dans adapteAuDernierPoint
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
         try {
             return (int) engine.eval(s);

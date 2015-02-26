@@ -57,7 +57,6 @@ public class MoteurInference {
         //2. Tant que (Pas terminé et il reste au moins une règle non marquée) faire
         while (!termine && !regles_non_marquees.isEmpty()) {
             List<Regle> regle_applicable = new ArrayList<Regle>();
-            Map<Regle, Point> caseQuiValideLaRegle = new HashMap<Regle, Point>();
 
             //2.1 Sélectionner les règles applicables : celles non marquées
             for (Iterator<Regle> i = regles_non_marquees.iterator(); i.hasNext();) {
@@ -69,20 +68,17 @@ public class MoteurInference {
                 } else {
 
                     //2.1 Sélectionner les règles applicables : celles dont les conditions existent dans la base de faits
-                    Point p = r.satisfaitConditions(faits);
-                    if (p != null) {
+                    if (r.satisfaitConditions(faits)) {
                         regle_applicable.add(r);
-                        caseQuiValideLaRegle.put(r, p);
                     }
                 }
             }
 
             //2.2 Choisir la règle à appliquer (arbitrairement, ou autre)
             Regle regle_appliquee = regle_applicable.get(0);
-            Point caseValidantLaRegle = caseQuiValideLaRegle.get(regle_appliquee);
 
             //2.3 Appliquer la règle: ajouter les conclusions à la base de faits
-            appliquerRegle(regle_appliquee, caseValidantLaRegle.x, caseValidantLaRegle.y, null); //TODO
+            appliquerRegle(regle_appliquee, -1, -1, null); //TODO
 
             //2.4 Marquer la règle
             regles_non_marquees.remove(regle_appliquee);
