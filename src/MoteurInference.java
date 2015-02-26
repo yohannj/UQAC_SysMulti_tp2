@@ -106,19 +106,72 @@ public class MoteurInference {
         this.carte = carte;
     }
 
-    private void appliquerRegle(Regle r) {
+    private void appliquerRegle(Regle r,int x, int y, String t) {
+    	int x_cible,y_cible;
+    	int i = 1;
+		boolean trouv = false;
         for (String s : r.getConsequence()) {
             if (s.contains("jouer")) {
                 termine = true;
-                if (s.matches("jouer(.*,.*)")) {
+                if (s.matches("jouer(.*;.*)")) {
                     //TODO Ajouter le fait jouer(x,y) dans les faits.
+                	String chaine1 = s.substring(7, s.length()-1).split(";")[0];
+                	String chaine2 = s.substring(7, s.length()-1).split(";")[1].replace(")", "");
+                	x_cible =valeur_dep(chaine1);
+                	y_cible =valeur_dep(chaine2);
+                	faits.add("jouer("+x_cible+";"+y_cible+")");
                 } else if (s.contains("last")){
                     //TODO On est dans le cas jouer(last_gauche) || jouer(last_haut) || jouer(last_droite). Déterminer (à l'aide d'une nouvelle fonction ?) x,y pour pouvoir ajouter jouer(x,y) dans les faits.
+                	if(s.contains("gauche")){
+                		while(!trouv){
+                			if(carte[x][y-i]=='v'){
+                				y_cible = y-i;
+                				trouv = true;
+                            	faits.add("jouer("+x+";"+y_cible+")");
+                			}else{
+                				i++;
+                			}
+                		}
+                	}else if(s.contains("haut")){
+                		while(!trouv){
+                			if(carte[x+i][y]=='v'){
+                				x_cible = x+i;
+                				trouv = true;
+                            	faits.add("jouer("+x_cible+";"+y+")");
+                			}else{
+                				i++;
+                			}
+                		}
+                	}else if(s.contains("bas")){
+                		while(!trouv){
+                			if(carte[x-i][y]=='v'){
+                				x_cible = x-i;
+                				trouv = true;
+                            	faits.add("jouer("+x_cible+";"+y+")");
+                			}else{
+                				i++;
+                			}
+                		}
+                	}
                 } else {
                     //TODO On est dans le cas jouer(aleatoire). Déterminer x,y depuis un fait "inconnu(x,y)" pour pouvoir ajouter jouer(x,y) dans les faits.
+                	Iterator iterator = faits.iterator();
+                	while(iterator.hasNext()&&!trouv){
+                		String element = (String) iterator.next();
+                		if(element.matches("jouer(.*;.*)")){
+                			trouv = true;
+                			x_cible = Integer.parseInt(element.substring(8, element.length()-1).split(";")[0]);
+                			y_cible = Integer.parseInt(element.substring(8, element.length()-1).split(";")[1].replace(")", ""));
+                        	faits.add("jouer("+x_cible+";"+y_cible+")");
+                		}
+                		
+                	}
                 }
             } else {
                 //TODO Rajout des conséquences dans les faits.
+            	for(String ch : s.split("=>")[1].replace(" ", "").split(",")){
+            		faits.add(ch.replace("x", Integer.toString(x)).replace("y", Integer.toString(y)));
+            	}
             }
         }
     }
@@ -184,5 +237,15 @@ public class MoteurInference {
         }
 
         return liste;
+    }
+    private int valeur_dep(String chaine){
+    	if(chaine.contains("+")){
+    		int dep = Integer.parseInt(chaine.split("+")[1]);
+    		return dernier_coup.x+dep;
+    	}else if(chaine.contains("-")){
+    		int dep = Integer.parseInt(chaine.split("-")[1]);
+    		return dernier_coup.x-dep;
+    	}
+    	return 0;
     }
 }
