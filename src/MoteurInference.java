@@ -63,22 +63,7 @@ public class MoteurInference {
             regles_non_marquees.add(new Regle(regles.get(i), dernier_coup.x, dernier_coup.y));
         }
 
-        if (dernier_coup.x > -1) {
-            File f = new File(FILE_NAME_inter);
-            FileWriter sortie;
-            try {
-                sortie = new FileWriter(f);
-
-                for (int i = 0; i < regles_non_marquees.size(); i++) {
-                    sortie.write(regles_non_marquees.get(i).toString()
-                            + String.format("%n"));
-                }
-                sortie.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
+       
 
         //2. Tant que (Pas terminé et il reste au moins une règle non marquée) faire
         while (!termine && !regles_non_marquees.isEmpty()) {
