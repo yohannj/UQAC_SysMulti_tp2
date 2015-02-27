@@ -82,7 +82,7 @@ public class MoteurInference {
             Regle regle_appliquee = regle_applicable.get(0);
 
             //2.3 Appliquer la règle: ajouter les conclusions à la base de faits
-            appliquerRegle(regle_appliquee, -1, -1, null); //TODO
+            appliquerRegle(regle_appliquee); //TODO
 
             //2.4 Marquer la règle
             regles_non_marquees.remove(regle_appliquee);
@@ -118,7 +118,7 @@ public class MoteurInference {
         }
     }
 
-    private void appliquerRegle(Regle r, int x, int y, String t) { //TODO virer int x, int y et String t. Les x et les y devraient être dernier_coup.x et dernier_coup.y
+    private void appliquerRegle(Regle r) { //TODO virer int x, int y et String t. Les x et les y devraient être dernier_coup.x et dernier_coup.y
         int x_cible, y_cible;
         int i = 1;
         boolean trouv = false;
@@ -134,38 +134,50 @@ public class MoteurInference {
                     //on demande à jouer le last machin
                     if (s.contains("gauche")) {
                         while (!trouv) {
-                            if (carte[x][y - i] == 'v') {
-                                y_cible = y - i;
+                            if (carte[dernier_coup.x][dernier_coup.y - i] == 'v') {
+                                y_cible = dernier_coup.y - i;
                                 trouv = true;
-                                faits.add("jouer(" + x + ";" + y_cible + ")");
+                                faits.add("jouer(" + dernier_coup.x + ";" + y_cible + ")");
                             } else {
                                 i++;
                             }
                         }
                     } else if (s.contains("haut")) {
                         while (!trouv) {
-                            if (carte[x + i][y] == 'v') {
-                                x_cible = x + i;
+                            if (carte[dernier_coup.x + i][dernier_coup.y] == 'v') {
+                                x_cible = dernier_coup.x + i;
                                 trouv = true;
-                                faits.add("jouer(" + x_cible + ";" + y + ")");
+                                faits.add("jouer(" + x_cible + ";" + dernier_coup.y + ")");
                             } else {
                                 i++;
                             }
                         }
                     } else if (s.contains("bas")) {
                         while (!trouv) {
-                            if (carte[x - i][y] == 'v') {
-                                x_cible = x - i;
+                            if (carte[dernier_coup.x - i][dernier_coup.y] == 'v') {
+                                x_cible = dernier_coup.x - i;
                                 trouv = true;
-                                faits.add("jouer(" + x_cible + ";" + y + ")");
+                                faits.add("jouer(" + x_cible + ";" + dernier_coup.y + ")");
                             } else {
                                 i++;
                             }
                         }
                     }
 
+                }else{// traiter le code jouer(aleatoire)
+                	Iterator iterator = faits.iterator();
+                	while(iterator.hasNext()&&!trouv){
+                		String element = (String) iterator.next();
+                		if(element.matches("inconnu(.*;.*)")){
+                			trouv = true;
+                			x_cible = Integer.parseInt(element.substring(7, element.length()-1).split(";")[0]);
+                			y_cible = Integer.parseInt(element.split(";")[1].replace(")", ""));
+                        	faits.add("jouer("+x_cible+";"+y_cible+")");
+                		}
+                		
+                	}
                 }
-            } else { //TODO traiter le code jouer(aleatoire)
+            } else { 
                 faits.add(s);
             }
         }
