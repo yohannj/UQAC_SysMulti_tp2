@@ -4,3 +4,5 @@ bin*
 transformer_texte/
 transformer_texte.rar
 src/inter.rules
+template_to_rules/
+template_to_rules.rar
