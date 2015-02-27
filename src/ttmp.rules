@@ -1,55 +1,57 @@
 ﻿##############Detecte types de cases##############
-case(xxx;yyy) = 'f' => existe(xxx;yyy), bateau(xxx;yyy), bateau(xxx;yyy;'f'), non_inconnu(xxx;yyy), non_bateau(xxx;yyy;'g'), non_bateau(xxx;yyy;'h'), non_bateau(xxx;yyy;'i'), non_bateau(xxx;yyy;'j')
-case(xxx;yyy) = 'g' => existe(xxx;yyy), bateau(xxx;yyy), bateau(xxx;yyy;'g'), non_inconnu(xxx;yyy), non_bateau(xxx;yyy;'f'), non_bateau(xxx;yyy;'h'), non_bateau(xxx;yyy;'i'), non_bateau(xxx;yyy;'j')
-case(xxx;yyy) = 'h' => existe(xxx;yyy), bateau(xxx;yyy), bateau(xxx;yyy;'h'), non_inconnu(xxx;yyy), non_bateau(xxx;yyy;'f'), non_bateau(xxx;yyy;'g'), non_bateau(xxx;yyy;'i'), non_bateau(xxx;yyy;'j')
-case(xxx;yyy) = 'i' => existe(xxx;yyy), bateau(xxx;yyy), bateau(xxx;yyy;'i'), non_inconnu(xxx;yyy), non_bateau(xxx;yyy;'f'), non_bateau(xxx;yyy;'g'), non_bateau(xxx;yyy;'h'), non_bateau(xxx;yyy;'j')
-case(xxx;yyy) = 'j' => existe(xxx;yyy), bateau(xxx;yyy), bateau(xxx;yyy;'j'), non_inconnu(xxx;yyy), non_bateau(xxx;yyy;'f'), non_bateau(xxx;yyy;'g'), non_bateau(xxx;yyy;'h'), non_bateau(xxx;yyy;'i')
-case(xxx;yyy) = 'o' => existe(xxx;yyy), non_bateau(xxx;yyy), non_inconnu(xxx;yyy)
-case(xxx;yyy) = 'v' => existe(xxx;yyy), non_bateau(xxx;yyy), inconnu(xxx;yyy)
+case(xxx;yyy) = 'f' => bateau(xxx;yyy), bateau(xxx;yyy;'f'), non_bateau(xxx;yyy;'g'), non_bateau(xxx;yyy;'h'), non_bateau(xxx;yyy;'i'), non_bateau(xxx;yyy;'j')
+case(xxx;yyy) = 'g' => bateau(xxx;yyy), bateau(xxx;yyy;'g'), non_bateau(xxx;yyy;'f'), non_bateau(xxx;yyy;'h'), non_bateau(xxx;yyy;'i'), non_bateau(xxx;yyy;'j')
+case(xxx;yyy) = 'h' => bateau(xxx;yyy), bateau(xxx;yyy;'h'), non_bateau(xxx;yyy;'f'), non_bateau(xxx;yyy;'g'), non_bateau(xxx;yyy;'i'), non_bateau(xxx;yyy;'j')
+case(xxx;yyy) = 'i' => bateau(xxx;yyy), bateau(xxx;yyy;'i'), non_bateau(xxx;yyy;'f'), non_bateau(xxx;yyy;'g'), non_bateau(xxx;yyy;'h'), non_bateau(xxx;yyy;'j')
+case(xxx;yyy) = 'j' => bateau(xxx;yyy), bateau(xxx;yyy;'j'), non_bateau(xxx;yyy;'f'), non_bateau(xxx;yyy;'g'), non_bateau(xxx;yyy;'h'), non_bateau(xxx;yyy;'i')
+case(xxx;yyy) = 'o' => non_bateau(xxx;yyy;'f'), non_bateau(xxx;yyy;'g'), non_bateau(xxx;yyy;'h'), non_bateau(xxx;yyy;'i'), non_bateau(xxx;yyy;'j')
+case(xxx;yyy) = 'v' => non_bateau(xxx;yyy;'f'), non_bateau(xxx;yyy;'g'), non_bateau(xxx;yyy;'h'), non_bateau(xxx;yyy;'i'), non_bateau(xxx;yyy;'j'), inconnu(xxx;yyy)
 ##############Coup de base##############
-##jouer bas##
-bateau(dernierX;dernierY), inconnu(dernierX+1;dernierY), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1) => jouer(dernierX+1;dernierY)
 ##jouer haut##
-bateau(dernierX;dernierY), inconnu(dernierX-1;dernierY), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1) => jouer(dernierX-1;dernierY)
-bateau(dernierX;dernierY;fffff), inconnu(dernierX-1;dernierY), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1) => jouer(dernierX-1;dernierY)
+bateau(dernierX;dernierY;fffff), bateau(dernierX+1;dernierY;fffff), inconnu(dernierX-1;dernierY) => jouer(dernierX-1;dernierY)
+bateau(dernierX;dernierY;fffff), non_bateau(dernierX+1;dernierY;fffff), non_bateau(dernierX;dernierY-1;fffff), non_bateau(dernierX;dernierY+1;fffff), inconnu(dernierX-1;dernierY) => jouer(dernierX-1;dernierY)
+##jouer bas##
+bateau(dernierX;dernierY;fffff), bateau(dernierX-1;dernierY;fffff), inconnu(dernierX+1;dernierY) => jouer(dernierX+1;dernierY)
+bateau(dernierX;dernierY;fffff), non_bateau(dernierX-1;dernierY;fffff), non_bateau(dernierX;dernierY-1;fffff), non_bateau(dernierX;dernierY+1;fffff), inconnu(dernierX+1;dernierY) => jouer(dernierX+1;dernierY)
 ##jouer gauche##
-bateau(dernierX;dernierY), inconnu(dernierX;dernierY-1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY) => jouer(dernierX;dernierY-1)
-bateau(dernierX;dernierY;fffff), inconnu(dernierX;dernierY-1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY;fffff) => jouer(dernierX;dernierY-1)
-bateau(dernierX;dernierY;fffff), inconnu(dernierX;dernierY-1), non_bateau(dernierX+1;dernierY;fffff), non_bateau(dernierX-1;dernierY) => jouer(dernierX;dernierY-1)
-bateau(dernierX;dernierY;fffff), inconnu(dernierX;dernierY-1), non_bateau(dernierX+1;dernierY;fffff), non_bateau(dernierX-1;dernierY;fffff) => jouer(dernierX;dernierY-1)
+bateau(dernierX;dernierY;fffff), bateau(dernierX;dernierY+1;fffff), inconnu(dernierX;dernierY-1) => jouer(dernierX;dernierY-1)
+bateau(dernierX;dernierY;fffff), non_bateau(dernierX+1;dernierY;fffff), non_bateau(dernierX-1;dernierY;fffff), non_bateau(dernierX;dernierY+1;fffff), inconnu(dernierX;dernierY-1) => jouer(dernierX;dernierY-1)
 ##jouer droite##
-bateau(dernierX;dernierY), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY) => jouer(dernierX;dernierY+1)
-bateau(dernierX;dernierY;fffff), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY) => jouer(dernierX;dernierY+1)
-bateau(dernierX;dernierY;fffff), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY;fffff) => jouer(dernierX;dernierY+1)
-bateau(dernierX;dernierY;fffff), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY;fffff) => jouer(dernierX;dernierY+1)
-bateau(dernierX;dernierY;fffff), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY;fffff), non_bateau(dernierX-1;dernierY) => jouer(dernierX;dernierY+1)
-bateau(dernierX;dernierY;fffff), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY;fffff), non_bateau(dernierX-1;dernierY) => jouer(dernierX;dernierY+1)
-bateau(dernierX;dernierY;fffff), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY;fffff), non_bateau(dernierX-1;dernierY;fffff) => jouer(dernierX;dernierY+1)
-bateau(dernierX;dernierY;fffff), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY;fffff), non_bateau(dernierX-1;dernierY;fffff) => jouer(dernierX;dernierY+1)
+bateau(dernierX;dernierY;fffff), bateau(dernierX;dernierY-1;fffff), inconnu(dernierX;dernierY+1) => jouer(dernierX;dernierY+1)
+bateau(dernierX;dernierY;fffff), non_bateau(dernierX+1;dernierY;fffff), non_bateau(dernierX-1;dernierY;fffff), non_bateau(dernierX;dernierY-1;fffff), inconnu(dernierX;dernierY+1) => jouer(dernierX;dernierY+1)
 ##############Detecte last_##############
-inconnu(xxx;yyy), bateau(xxx+1;yyy) => last_bas_inconnu(xxx+1;yyy)
-inconnu(xxx;yyy), bateau(xxx;yyy-1) => last_gauche_inconnu(xxx;yyy-1)
-inconnu(xxx;yyy), bateau(xxx;yyy+1) => last_droite_inconnu(xxx;yyy+1)
-last_bas_inconnu(xxx;yyy), bateau(xxx;yyy;fffff), bateau(xxx+1;yyy;fffff) => last_bas_inconnu(xxx+1;yyy)
+inconnu(xxx;yyy), bateau(xxx+1;yyy) => last_haut_inconnu(xxx+1;yyy)
+inconnu(xxx;yyy), bateau(xxx-1;yyy) => last_bas_inconnu(xxx-1;yyy)
+inconnu(xxx;yyy), bateau(xxx;yyy+1) => last_gauche_inconnu(xxx;yyy+1)
+inconnu(xxx;yyy), bateau(xxx;yyy-1) => last_droite_inconnu(xxx;yyy-1)
+last_haut_inconnu(xxx;yyy), bateau(xxx;yyy;fffff), bateau(xxx+1;yyy;fffff) => last_haut_inconnu(xxx+1;yyy);
+last_bas_inconnu(xxx;yyy), bateau(xxx;yyy;fffff), bateau(xxx-1;yyy;fffff) => last_bas_inconnu(xxx-1;yyy)
 last_gauche_inconnu(xxx;yyy), bateau(xxx;yyy;fffff), bateau(xxx;yyy+1;fffff) => last_gauche_inconnu(xxx;yyy+1)
 last_droite_inconnu(xxx;yyy), bateau(xxx;yyy;fffff), bateau(xxx;yyy-1;fffff) => last_droite_inconnu(xxx;yyy-1)
 ##############Traque##############
-##traque à bas##
-#bateau(dernierX;dernierY;fffff), non_bateau(dernierX+1;dernierY), bateau(dernierX-1;dernierY;fffff), last_bas_inconnu(dernierX;dernierY) => jouer(last_bas)
+##traque en haut##
+bateau(dernierX;dernierY;fffff), bateau(dernierX-1;dernierY;fffff), last_haut_inconnu(dernierX;dernierY) => jouer(last_haut)
+##traque en bas##
 bateau(dernierX;dernierY;fffff), bateau(dernierX+1;dernierY;fffff), last_bas_inconnu(dernierX;dernierY) => jouer(last_bas)
-##traque en gauche##
-#bateau(dernierX;dernierY;fffff), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY), bateau(dernierX;dernierY-1;fffff), last_gauche_inconnu(dernierX;dernierY) => jouer(last_gauche)
-#bateau(dernierX;dernierY;fffff), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY;fffff), bateau(dernierX;dernierY-1;fffff), last_gauche_inconnu(dernierX;dernierY) => jouer(last_gauche)
-#bateau(dernierX;dernierY;fffff), non_bateau(dernierX+1;dernierY;fffff), non_bateau(dernierX-1;dernierY), bateau(dernierX;dernierY-1;fffff), last_gauche_inconnu(dernierX;dernierY) => jouer(last_gauche)
+##traque à gauche##
 bateau(dernierX;dernierY;fffff), bateau(dernierX;dernierY-1;fffff), last_gauche_inconnu(dernierX;dernierY) => jouer(last_gauche)
-##traque en droite##
-#bateau(dernierX;dernierY;fffff), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY), non_bateau(dernierX;dernierY-1), bateau(dernierX;dernierY+1;fffff), last_droite_inconnu(dernierX;dernierY) => jouer(last_droite)
-#bateau(dernierX;dernierY;fffff), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY), non_bateau(dernierX;dernierY-1;fffff), bateau(dernierX;dernierY+1;fffff), last_droite_inconnu(dernierX;dernierY) => jouer(last_droite)
-#bateau(dernierX;dernierY;fffff), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY;fffff), non_bateau(dernierX;dernierY-1), bateau(dernierX;dernierY+1;fffff), last_droite_inconnu(dernierX;dernierY) => jouer(last_droite)
-#bateau(dernierX;dernierY;fffff), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY;fffff), non_bateau(dernierX;dernierY-1;fffff), bateau(dernierX;dernierY+1;fffff), last_droite_inconnu(dernierX;dernierY) => jouer(last_droite)
-##bateau(dernierX;dernierY;fffff), non_bateau(dernierX+1;dernierY;fffff), non_bateau(dernierX-1;dernierY), non_bateau(dernierX;dernierY-1), bateau(dernierX;dernierY+1;fffff), last_droite_inconnu(dernierX;dernierY) => jouer(last_droite)
-#bateau(dernierX;dernierY;fffff), non_bateau(dernierX+1;dernierY;fffff), non_bateau(dernierX-1;dernierY), non_bateau(dernierX;dernierY-1;fffff), bateau(dernierX;dernierY+1;fffff), last_droite_inconnu(dernierX;dernierY) => jouer(last_droite)
-#bateau(dernierX;dernierY;fffff), non_bateau(dernierX+1;dernierY;fffff), non_bateau(dernierX-1;dernierY;fffff), non_bateau(dernierX;dernierY-1), bateau(dernierX;dernierY+1;fffff), last_droite_inconnu(dernierX;dernierY) => jouer(last_droite)
+##traque à droite##
 bateau(dernierX;dernierY;fffff), bateau(dernierX;dernierY+1;fffff), last_droite_inconnu(dernierX;dernierY) => jouer(last_droite)
+##############Quelques coups aléatoires pour traiter correctement les cas de bordure##############
+##lien jouer haut/bas des bordures##
+bateau(dernierX;dernierY;fffff), bateau(dernierX;dernierY-1;fffff) => jouer(aleatoire)
+bateau(dernierX;dernierY;fffff), bateau(dernierX;dernierY+1;fffff) => jouer(aleatoire)
+##lien jouer gauche/droite des bordures##
+bateau(dernierX;dernierY;fffff), bateau(dernierX-1;dernierY;fffff) => jouer(aleatoire)
+bateau(dernierX;dernierY;fffff), bateau(dernierX+1;dernierY;fffff) => jouer(aleatoire)
+##############Coup pour traiter les cas de bordure##############
+##jouer haut##
+bateau(dernierX;dernierY;fffff), inconnu(dernierX-1;dernierY) => jouer(dernierX-1;dernierY)
+##jouer bas##
+bateau(dernierX;dernierY;fffff), inconnu(dernierX+1;dernierY) => jouer(dernierX+1;dernierY)
+##jouer gauche##
+bateau(dernierX;dernierY;fffff), inconnu(dernierX;dernierY-1) => jouer(dernierX;dernierY-1)
+##jouer droite##
+bateau(dernierX;dernierY;fffff), inconnu(dernierX;dernierY+1) => jouer(dernierX;dernierY+1)
 ##############Coup par défaut##############
  => jouer(aleatoire)

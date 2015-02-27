@@ -14,6 +14,7 @@ public class MoteurInference {
     private Point dernier_coup;
     private Point avant_dernier_coup;
     private boolean termine;
+    private boolean coup_aleatoire;
 
     public static MoteurInference getInstance() {
         if (MI == null) {
@@ -49,6 +50,11 @@ public class MoteurInference {
      *         jouer : {x,y}
      */
     public int[] calculCoup() {
+        
+        //0. Initialise variable perso
+        termine = false;
+        coup_aleatoire = false;
+        
         //1. Obtenir les faits initiaux
         initFaits();
 
@@ -74,14 +80,12 @@ public class MoteurInference {
             }
         }
 
-        termine = false;
-
         //2. Tant que (Pas terminé et il reste au moins une règle non marquée) faire
         while (!termine && !regles_non_marquees.isEmpty()) {
             List<Regle> regle_applicable = new ArrayList<Regle>();
 
             //2.1 Sélectionner les règles applicables : celles non marquées
-            for (Iterator<Regle> i = regles_non_marquees.iterator(); i.hasNext();) {
+            for (Iterator<Regle> i = regles_non_marquees.iterator(); regle_applicable.isEmpty() && i.hasNext();) {
                 Regle r = i.next();
 
                 //2.1 Sélectionner les règles applicables : si une des règles est en contradiction, marquer la règle
@@ -121,6 +125,8 @@ public class MoteurInference {
                 dernier_coup = new Point(x, y);
             }
         }
+        
+        avant_dernier_coup = coup_aleatoire ? dernier_coup : avant_dernier_coup;
 
         return new int[] { dernier_coup.x, dernier_coup.y };
     }
@@ -205,6 +211,7 @@ public class MoteurInference {
                         }
 
                     } else {// traiter le code jouer(aleatoire)
+                        coup_aleatoire = true;
                         Iterator<String> iterator = faits.iterator();
                         while (iterator.hasNext() && !trouv) {
                             String element = (String) iterator.next();
