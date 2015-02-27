@@ -39,9 +39,13 @@ bateau(dernierX;dernierY;fffff), bateau(dernierX;dernierY-1;fffff), last_gauche_
 bateau(dernierX;dernierY;fffff), bateau(dernierX;dernierY+1;fffff), last_droite_inconnu(dernierX;dernierY) => jouer(last_droite)
 ##############Quelques coups aléatoires pour traiter correctement les cas de bordure##############
 ##lien jouer haut/bas des bordures##
+bateau(dernierX;dernierY;fffff), bateau(dernierX;dernierY-1;fffff), inconnu(xxx;yyy), inconnu(xxx+1;yyy), inconnu(xxx-1;yyy), inconnu(xxx;yyy+1), inconnu(xxx;yyy-1) => jouer(xxx;yyy)
+bateau(dernierX;dernierY;fffff), bateau(dernierX;dernierY+1;fffff), inconnu(xxx;yyy), inconnu(xxx+1;yyy), inconnu(xxx-1;yyy), inconnu(xxx;yyy+1), inconnu(xxx;yyy-1) => jouer(xxx;yyy)
 bateau(dernierX;dernierY;fffff), bateau(dernierX;dernierY-1;fffff) => jouer(aleatoire)
 bateau(dernierX;dernierY;fffff), bateau(dernierX;dernierY+1;fffff) => jouer(aleatoire)
 ##lien jouer gauche/droite des bordures##
+bateau(dernierX;dernierY;fffff), bateau(dernierX-1;dernierY;fffff), inconnu(xxx;yyy), inconnu(xxx+1;yyy), inconnu(xxx-1;yyy), inconnu(xxx;yyy+1), inconnu(xxx;yyy-1) => jouer(xxx;yyy)
+bateau(dernierX;dernierY;fffff), bateau(dernierX+1;dernierY;fffff), inconnu(xxx;yyy), inconnu(xxx+1;yyy), inconnu(xxx-1;yyy), inconnu(xxx;yyy+1), inconnu(xxx;yyy-1) => jouer(xxx;yyy)
 bateau(dernierX;dernierY;fffff), bateau(dernierX-1;dernierY;fffff) => jouer(aleatoire)
 bateau(dernierX;dernierY;fffff), bateau(dernierX+1;dernierY;fffff) => jouer(aleatoire)
 ##############Coup pour traiter les cas de bordure##############
@@ -53,5 +57,7 @@ bateau(dernierX;dernierY;fffff), inconnu(dernierX+1;dernierY) => jouer(dernierX+
 bateau(dernierX;dernierY;fffff), inconnu(dernierX;dernierY-1) => jouer(dernierX;dernierY-1)
 ##jouer droite##
 bateau(dernierX;dernierY;fffff), inconnu(dernierX;dernierY+1) => jouer(dernierX;dernierY+1)
+##############Coup par défaut optimisé##############
+inconnu(xxx;yyy), inconnu(xxx+1;yyy), inconnu(xxx-1;yyy), inconnu(xxx;yyy+1), inconnu(xxx;yyy-1) => jouer(xxx;yyy)
 ##############Coup par défaut##############
  => jouer(aleatoire)

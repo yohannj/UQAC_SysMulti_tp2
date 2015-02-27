@@ -50,11 +50,11 @@ public class MoteurInference {
      *         jouer : {x,y}
      */
     public int[] calculCoup() {
-        
+
         //0. Initialise variable perso
         termine = false;
         coup_aleatoire = false;
-        
+
         //1. Obtenir les faits initiaux
         initFaits();
 
@@ -85,7 +85,8 @@ public class MoteurInference {
             List<Regle> regle_applicable = new ArrayList<Regle>();
 
             //2.1 Sélectionner les règles applicables : celles non marquées
-            for (Iterator<Regle> i = regles_non_marquees.iterator(); regle_applicable.isEmpty() && i.hasNext();) {
+            for (Iterator<Regle> i = regles_non_marquees.iterator(); regle_applicable.isEmpty()
+                    && i.hasNext();) {
                 Regle r = i.next();
 
                 //2.1 Sélectionner les règles applicables : si une des règles est en contradiction, marquer la règle
@@ -104,7 +105,6 @@ public class MoteurInference {
             Regle regle_appliquee = regle_applicable.get(0);
 
             //2.3 Appliquer la règle: ajouter les conclusions à la base de faits
-            System.out.println(regle_appliquee.toString());
             appliquerRegle(regle_appliquee);
 
             //2.4 Marquer la règle
@@ -119,13 +119,12 @@ public class MoteurInference {
                 && dernier_coup == null;) {
             String fait = i.next();
             if (fait.contains("jouer")) {
-                System.out.println(fait);
                 int x = Integer.parseInt(fait.split(";")[0].split("\\(")[1]);
                 int y = Integer.parseInt(fait.split(";")[1].split("\\)")[0]);
                 dernier_coup = new Point(x, y);
             }
         }
-        
+
         avant_dernier_coup = coup_aleatoire ? dernier_coup : avant_dernier_coup;
 
         return new int[] { dernier_coup.x, dernier_coup.y };
@@ -136,15 +135,14 @@ public class MoteurInference {
      *            Mets à jour les informations connus sur la carte
      */
     public void majCarteEtDernierPoint(char[][] carte) {
-        System.out.println("Début : " + avant_dernier_coup.x + " - " + avant_dernier_coup.y + " - "+ dernier_coup.x + " - "+ dernier_coup.y);
         this.carte = carte;
-        if (avant_dernier_coup.x > -1 && dernier_coup.x > -1
+        if (avant_dernier_coup.x > -1
+                && dernier_coup.x > -1
                 && carte[avant_dernier_coup.x][avant_dernier_coup.y] != 'o'
                 && carte[avant_dernier_coup.x][avant_dernier_coup.y] != 'v'
                 && carte[dernier_coup.x][dernier_coup.y] != carte[avant_dernier_coup.x][avant_dernier_coup.y]) {
             dernier_coup = avant_dernier_coup;
         }
-        System.out.println("Fin : " + avant_dernier_coup.x + " - " + avant_dernier_coup.y + " - "+ dernier_coup.x + " - "+ dernier_coup.y);
     }
 
     private void appliquerRegle(Regle r) {
@@ -156,13 +154,11 @@ public class MoteurInference {
                 termine = true;
                 if (!s.contains(";")) {
                     if (s.contains("jouer(dernier")) {
-                        System.out.println("I SHOULD NOT BE HERE");
                         //Si on demande de jouer par rapport au dernier coup
                         x_cible = valeur_dep_x(s.split(";")[0]);
                         y_cible = valeur_dep_y(s.split(";")[1]);
                         faits.add("jouer(" + x_cible + ";" + y_cible);
                     } else if (s.contains("jouer(last")) {
-                        System.out.println("I will play last");
                         //on demande à jouer le last machin
                         if (s.contains("gauche")) {
                             while (!trouv) {
@@ -197,9 +193,9 @@ public class MoteurInference {
                                     i++;
                                 }
                             }
-                        }else if (s.contains("droite")) {
+                        } else if (s.contains("droite")) {
                             while (!trouv) {
-                                if (carte[dernier_coup.x ][dernier_coup.y+i] == 'v') {
+                                if (carte[dernier_coup.x][dernier_coup.y + i] == 'v') {
                                     y_cible = dernier_coup.y + i;
                                     trouv = true;
                                     faits.add("jouer(" + dernier_coup.x + ";"
@@ -275,10 +271,6 @@ public class MoteurInference {
                     for (String s : listeFait.split(",")) {
                         if (!s.equals("")) //Ajouter pour permettre un coup aléatoire
                             regle.addPremisse(s);
-                    }
-                    if (ligneSpliter.length == 1) {
-                        System.out.println(ligne);
-                        System.out.println(ligne.contains("#"));
                     }
                     String listeConseq = ligneSpliter[1].replace(" ", "");
                     for (String s : listeConseq.split(",")) {
