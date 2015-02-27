@@ -133,9 +133,9 @@ public class MoteurInference {
         System.out.println("Début : " + avant_dernier_coup.x + " - " + avant_dernier_coup.y + " - "+ dernier_coup.x + " - "+ dernier_coup.y);
         this.carte = carte;
         if (avant_dernier_coup.x > -1 && dernier_coup.x > -1
-                && carte[dernier_coup.x][dernier_coup.y] == 'o'
                 && carte[avant_dernier_coup.x][avant_dernier_coup.y] != 'o'
-                && carte[avant_dernier_coup.x][avant_dernier_coup.y] != 'v') {
+                && carte[avant_dernier_coup.x][avant_dernier_coup.y] != 'v'
+                && carte[dernier_coup.x][dernier_coup.y] != carte[avant_dernier_coup.x][avant_dernier_coup.y]) {
             dernier_coup = avant_dernier_coup;
         }
         System.out.println("Fin : " + avant_dernier_coup.x + " - " + avant_dernier_coup.y + " - "+ dernier_coup.x + " - "+ dernier_coup.y);
@@ -169,7 +169,7 @@ public class MoteurInference {
                                     i++;
                                 }
                             }
-                        } else if (s.contains("haut")) {
+                        } else if (s.contains("bas")) {
                             while (!trouv) {
                                 if (carte[dernier_coup.x + i][dernier_coup.y] == 'v') {
                                     x_cible = dernier_coup.x + i;
@@ -180,13 +180,24 @@ public class MoteurInference {
                                     i++;
                                 }
                             }
-                        } else if (s.contains("bas")) {
+                        } else if (s.contains("haut")) {
                             while (!trouv) {
                                 if (carte[dernier_coup.x - i][dernier_coup.y] == 'v') {
                                     x_cible = dernier_coup.x - i;
                                     trouv = true;
                                     faits.add("jouer(" + x_cible + ";"
                                             + dernier_coup.y + ")");
+                                } else {
+                                    i++;
+                                }
+                            }
+                        }else if (s.contains("droite")) {
+                            while (!trouv) {
+                                if (carte[dernier_coup.x ][dernier_coup.y+i] == 'v') {
+                                    y_cible = dernier_coup.y + i;
+                                    trouv = true;
+                                    faits.add("jouer(" + dernier_coup.x + ";"
+                                            + y_cible + ")");
                                 } else {
                                     i++;
                                 }
