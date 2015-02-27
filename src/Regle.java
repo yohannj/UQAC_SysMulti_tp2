@@ -38,9 +38,9 @@ public class Regle {
     public boolean satisfaitCondition(String fait) {
         for (String s : premisses) {
             if (fait.equals(s))
-                return false;
+                return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -50,13 +50,7 @@ public class Regle {
      */
     public boolean satisfaitConditions(Set<String> faits) {
         for (String s : premisses) {
-            boolean satisfied = false;
-            for (Iterator<String> i = faits.iterator(); !satisfied
-                    && i.hasNext();) {
-                if (s.equals(i.next()))
-                    satisfied = true;
-            }
-            if (!satisfied)
+            if (!faits.contains(s))
                 return false;
         }
         return true;
