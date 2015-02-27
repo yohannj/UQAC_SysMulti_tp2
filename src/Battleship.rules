@@ -703,12 +703,14 @@ case(9;9) = 'v' => inconnu(9;9)
 ##jouer droite##
 bateau(dernierX;dernierY), inconnu(dernierX+1;dernierY), inconnu(dernierX-1;dernierY), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1) => jouer(dernierX+1;dernierY)
 ##jouer gauche##
+bateau(dernierX;dernierY), inconnu(dernierX-1;dernierY), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY) => jouer(dernierX-1;dernierY)
 bateau(dernierX;dernierY;'f'), inconnu(dernierX-1;dernierY), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY;'f') => jouer(dernierX-1;dernierY)
 bateau(dernierX;dernierY;'g'), inconnu(dernierX-1;dernierY), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY;'g') => jouer(dernierX-1;dernierY)
 bateau(dernierX;dernierY;'h'), inconnu(dernierX-1;dernierY), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY;'h') => jouer(dernierX-1;dernierY)
 bateau(dernierX;dernierY;'i'), inconnu(dernierX-1;dernierY), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY;'i') => jouer(dernierX-1;dernierY)
 bateau(dernierX;dernierY;'j'), inconnu(dernierX-1;dernierY), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY;'j') => jouer(dernierX-1;dernierY)
 ##jouer haut##
+bateau(dernierX;dernierY), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY) => jouer(dernierX;dernierY-1)
 bateau(dernierX;dernierY;'f'), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY;'f') => jouer(dernierX;dernierY-1)
 bateau(dernierX;dernierY;'g'), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY;'g') => jouer(dernierX;dernierY-1)
 bateau(dernierX;dernierY;'h'), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY;'h') => jouer(dernierX;dernierY-1)
@@ -725,6 +727,7 @@ bateau(dernierX;dernierY;'h'), inconnu(dernierX;dernierY-1), inconnu(dernierX;de
 bateau(dernierX;dernierY;'i'), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY;'i'), non_bateau(dernierX-1;dernierY;'i') => jouer(dernierX;dernierY-1)
 bateau(dernierX;dernierY;'j'), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY;'j'), non_bateau(dernierX-1;dernierY;'j') => jouer(dernierX;dernierY-1)
 ##jouer bas##
+bateau(dernierX;dernierY), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY), non_bateau(dernierX;dernierY-1) => jouer(dernierX;dernierY+1)
 bateau(dernierX;dernierY;'f'), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY), non_bateau(dernierX;dernierY-1;'f') => jouer(dernierX;dernierY+1)
 bateau(dernierX;dernierY;'g'), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY), non_bateau(dernierX;dernierY-1;'g') => jouer(dernierX;dernierY+1)
 bateau(dernierX;dernierY;'h'), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY), non_bateau(dernierX;dernierY-1;'h') => jouer(dernierX;dernierY+1)

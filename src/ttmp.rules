@@ -1,0 +1,55 @@
+##############Detecte types de cases##############
+case(x;y) = 'f' => bateau(x;y), bateau(x;y;'f'), non_inconnu(x;y), non_bateau(x;y;'g'), non_bateau(x;y;'h'), non_bateau(x;y;'i'), non_bateau(x;y;'j')
+case(x;y) = 'g' => bateau(x;y), bateau(x;y;'g'), non_inconnu(x;y), non_bateau(x;y;'f'), non_bateau(x;y;'h'), non_bateau(x;y;'i'), non_bateau(x;y;'j')
+case(x;y) = 'h' => bateau(x;y), bateau(x;y;'h'), non_inconnu(x;y), non_bateau(x;y;'f'), non_bateau(x;y;'g'), non_bateau(x;y;'i'), non_bateau(x;y;'j')
+case(x;y) = 'i' => bateau(x;y), bateau(x;y;'i'), non_inconnu(x;y), non_bateau(x;y;'f'), non_bateau(x;y;'g'), non_bateau(x;y;'h'), non_bateau(x;y;'j')
+case(x;y) = 'j' => bateau(x;y), bateau(x;y;'j'), non_inconnu(x;y), non_bateau(x;y;'f'), non_bateau(x;y;'g'), non_bateau(x;y;'h'), non_bateau(x;y;'i')
+case(x;y) = 'o' => non_bateau(x;y), non_inconnu(x;y)
+case(x;y) = 'v' => non_bateau(x;y), inconnu(x;y)
+##############Coup de base##############
+##jouer droite##
+bateau(dernierX;dernierY), inconnu(dernierX+1;dernierY), inconnu(dernierX-1;dernierY), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1) => jouer(dernierX+1;dernierY)
+##jouer gauche##
+bateau(dernierX;dernierY), inconnu(dernierX-1;dernierY), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY) => jouer(dernierX-1;dernierY)
+bateau(dernierX;dernierY;type), inconnu(dernierX-1;dernierY), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY;type) => jouer(dernierX-1;dernierY)
+##jouer haut##
+bateau(dernierX;dernierY), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY) => jouer(dernierX;dernierY-1)
+bateau(dernierX;dernierY;type), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY;type) => jouer(dernierX;dernierY-1)
+bateau(dernierX;dernierY;type), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY;type), non_bateau(dernierX-1;dernierY) => jouer(dernierX;dernierY-1)
+bateau(dernierX;dernierY;type), inconnu(dernierX;dernierY-1), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY;type), non_bateau(dernierX-1;dernierY;type) => jouer(dernierX;dernierY-1)
+##jouer bas##
+bateau(dernierX;dernierY), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY), non_bateau(dernierX;dernierY-1) => jouer(dernierX;dernierY+1)
+bateau(dernierX;dernierY;type), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY), non_bateau(dernierX;dernierY-1;type) => jouer(dernierX;dernierY+1)
+bateau(dernierX;dernierY;type), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY;type), non_bateau(dernierX;dernierY-1) => jouer(dernierX;dernierY+1)
+bateau(dernierX;dernierY;type), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY;type), non_bateau(dernierX;dernierY-1;type) => jouer(dernierX;dernierY+1)
+bateau(dernierX;dernierY;type), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY;type), non_bateau(dernierX-1;dernierY), non_bateau(dernierX;dernierY-1) => jouer(dernierX;dernierY+1)
+bateau(dernierX;dernierY;type), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY;type), non_bateau(dernierX-1;dernierY), non_bateau(dernierX;dernierY-1;type) => jouer(dernierX;dernierY+1)
+bateau(dernierX;dernierY;type), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY;type), non_bateau(dernierX-1;dernierY;type), non_bateau(dernierX;dernierY-1) => jouer(dernierX;dernierY+1)
+bateau(dernierX;dernierY;type), inconnu(dernierX;dernierY+1), non_bateau(dernierX+1;dernierY;type), non_bateau(dernierX-1;dernierY;type), non_bateau(dernierX;dernierY-1;type) => jouer(dernierX;dernierY+1)
+##############Detecte last_##############
+inconnu(x;y), non_inconnu(x+1;y) => last_gauche_inconnu(x+1;y)
+inconnu(x;y), non_inconnu(x;y-1) => last_haut_inconnu(x;y-1)
+inconnu(x;y), non_inconnu(x;y+1) => last_bas_inconnu(x;y+1)
+last_gauche_inconnu(x;y), bateau(x;y;t), bateau(x+1;y;t) => last_gauche_inconnu(x+1;y)
+last_haut_inconnu(x;y), bateau(x;y;t), bateau(x;y+1;t) => last_haut_inconnu(x;y+1)
+last_bas_inconnu(x;y), bateau(x;y;t), bateau(x;y-1;t) => last_bas_inconnu(x;y-1)
+##############Traque##############
+##traque à gauche##
+bateau(dernierX;dernierY;type), non_bateau(dernierX+1;dernierY), bateau(dernierX-1;dernierY;type), last_gauche_inconnu(dernierX;dernierY) => jouer(last_gauche)
+bateau(dernierX;dernierY;type), non_bateau(dernierX+1;dernierY;type), bateau(dernierX-1;dernierY;type), last_gauche_inconnu(dernierX;dernierY) => jouer(last_gauche)
+##traque en haut##
+bateau(dernierX;dernierY;type), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY), bateau(dernierX;dernierY-1;type), last_haut_inconnu(dernierX;dernierY) => jouer(last_haut)
+bateau(dernierX;dernierY;type), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY;type), bateau(dernierX;dernierY-1;type), last_haut_inconnu(dernierX;dernierY) => jouer(last_haut)
+bateau(dernierX;dernierY;type), non_bateau(dernierX+1;dernierY;type), non_bateau(dernierX-1;dernierY), bateau(dernierX;dernierY-1;type), last_haut_inconnu(dernierX;dernierY) => jouer(last_haut)
+bateau(dernierX;dernierY;type), non_bateau(dernierX+1;dernierY;type), non_bateau(dernierX-1;dernierY;type), bateau(dernierX;dernierY-1;type), last_haut_inconnu(dernierX;dernierY) => jouer(last_haut)
+##traque en bas##
+bateau(dernierX;dernierY;type), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY), non_bateau(dernierX;dernierY-1), bateau(dernierX;dernierY+1;type), last_bas_inconnu(dernierX;dernierY) => jouer(last_bas)
+bateau(dernierX;dernierY;type), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY), non_bateau(dernierX;dernierY-1;type), bateau(dernierX;dernierY+1;type), last_bas_inconnu(dernierX;dernierY) => jouer(last_bas)
+bateau(dernierX;dernierY;type), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY;type), non_bateau(dernierX;dernierY-1), bateau(dernierX;dernierY+1;type), last_bas_inconnu(dernierX;dernierY) => jouer(last_bas)
+bateau(dernierX;dernierY;type), non_bateau(dernierX+1;dernierY), non_bateau(dernierX-1;dernierY;type), non_bateau(dernierX;dernierY-1;type), bateau(dernierX;dernierY+1;type), last_bas_inconnu(dernierX;dernierY) => jouer(last_bas)
+bateau(dernierX;dernierY;type), non_bateau(dernierX+1;dernierY;type), non_bateau(dernierX-1;dernierY), non_bateau(dernierX;dernierY-1), bateau(dernierX;dernierY+1;type), last_bas_inconnu(dernierX;dernierY) => jouer(last_bas)
+bateau(dernierX;dernierY;type), non_bateau(dernierX+1;dernierY;type), non_bateau(dernierX-1;dernierY), non_bateau(dernierX;dernierY-1;type), bateau(dernierX;dernierY+1;type), last_bas_inconnu(dernierX;dernierY) => jouer(last_bas)
+bateau(dernierX;dernierY;type), non_bateau(dernierX+1;dernierY;type), non_bateau(dernierX-1;dernierY;type), non_bateau(dernierX;dernierY-1), bateau(dernierX;dernierY+1;type), last_bas_inconnu(dernierX;dernierY) => jouer(last_bas)
+bateau(dernierX;dernierY;type), non_bateau(dernierX+1;dernierY;type), non_bateau(dernierX-1;dernierY;type), non_bateau(dernierX;dernierY-1;type), bateau(dernierX;dernierY+1;type), last_bas_inconnu(dernierX;dernierY) => jouer(last_bas)
+##############Coup par défaut##############
+ => jouer(aleatoire)

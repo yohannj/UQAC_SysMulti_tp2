@@ -6,6 +6,7 @@ public class MoteurInference {
 
     private static MoteurInference MI;
     private final String FILE_NAME = "src/Battleship.rules";
+    private final String FILE_NAME_inter = "src/inter.rules";
     private List<Regle> regles;
     private Set<String> faits;
     private char[][] carte;
@@ -27,6 +28,7 @@ public class MoteurInference {
      */
     private MoteurInference() {
         dernier_coup = new Point(-1, -1);
+        avant_dernier_coup = new Point(-1, -1);
         regles = parser(FILE_NAME);
         faits = new HashSet<String>();
     }
@@ -52,10 +54,26 @@ public class MoteurInference {
 
         List<Regle> regles_non_marquees = new ArrayList<Regle>(); //Liste contenant une copie des règles
         for (int i = 0; i < regles.size(); ++i) {
-            regles_non_marquees.add(new Regle(regles.get(i)));
+            regles_non_marquees.add(new Regle(regles.get(i), dernier_coup.x, dernier_coup.y));
         }
-        regles_non_marquees.parallelStream()
-                .forEach(r -> r.adapteAuDernierPoint(dernier_coup.x, dernier_coup.y)); //Transforme la copie des règles pour adapter celles dépendant du dernier point
+
+        if (dernier_coup.x > -1) {
+            File f = new File(FILE_NAME_inter);
+            FileWriter sortie;
+            try {
+                sortie = new FileWriter(f);
+
+                for (int i = 0; i < regles_non_marquees.size(); i++) {
+                    sortie.write(regles_non_marquees.get(i).toString()
+                            + String.format("%n"));
+                }
+                sortie.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
         termine = false;
 
         //2. Tant que (Pas terminé et il reste au moins une règle non marquée) faire
@@ -82,7 +100,8 @@ public class MoteurInference {
             Regle regle_appliquee = regle_applicable.get(0);
 
             //2.3 Appliquer la règle: ajouter les conclusions à la base de faits
-            appliquerRegle(regle_appliquee); //TODO
+            System.out.println(regle_appliquee.toString());
+            appliquerRegle(regle_appliquee);
 
             //2.4 Marquer la règle
             regles_non_marquees.remove(regle_appliquee);
@@ -90,14 +109,15 @@ public class MoteurInference {
         }
 
         //3. Fin
+        avant_dernier_coup = dernier_coup;
         dernier_coup = null;
         for (Iterator<String> i = faits.iterator(); i.hasNext()
                 && dernier_coup == null;) {
             String fait = i.next();
             if (fait.contains("jouer")) {
-                int x = Integer.parseInt(fait.split(";")[0].split("(")[1]);
-                int y = Integer.parseInt(fait.split(";")[1].split(")")[0]);
-                avant_dernier_coup = dernier_coup;
+                System.out.println(fait);
+                int x = Integer.parseInt(fait.split(";")[0].split("\\(")[1]);
+                int y = Integer.parseInt(fait.split(";")[1].split("\\)")[0]);
                 dernier_coup = new Point(x, y);
             }
         }
@@ -110,74 +130,88 @@ public class MoteurInference {
      *            Mets à jour les informations connus sur la carte
      */
     public void majCarteEtDernierPoint(char[][] carte) {
+        System.out.println("Début : " + avant_dernier_coup.x + " - " + avant_dernier_coup.y + " - "+ dernier_coup.x + " - "+ dernier_coup.y);
         this.carte = carte;
-        if (dernier_coup.x > -1 && carte[dernier_coup.x][dernier_coup.y] == 'o'
+        if (avant_dernier_coup.x > -1 && dernier_coup.x > -1
+                && carte[dernier_coup.x][dernier_coup.y] == 'o'
                 && carte[avant_dernier_coup.x][avant_dernier_coup.y] != 'o'
                 && carte[avant_dernier_coup.x][avant_dernier_coup.y] != 'v') {
             dernier_coup = avant_dernier_coup;
         }
+        System.out.println("Fin : " + avant_dernier_coup.x + " - " + avant_dernier_coup.y + " - "+ dernier_coup.x + " - "+ dernier_coup.y);
     }
 
-    private void appliquerRegle(Regle r) { //TODO virer int x, int y et String t. Les x et les y devraient être dernier_coup.x et dernier_coup.y
+    private void appliquerRegle(Regle r) {
         int x_cible, y_cible;
         int i = 1;
         boolean trouv = false;
         for (String s : r.getConsequence()) {
             if (s.contains("jouer")) {
                 termine = true;
-                if (s.contains("jouer(dernier")) {
-                    //Si on demande de jouer par rapport au dernier coup
-                    x_cible = valeur_dep_x(s.split(";")[0]);
-                    y_cible = valeur_dep_y(s.split(";")[1]);
-                    faits.add("jouer(" + x_cible + ";" + y_cible);
-                } else if (s.contains("jouer(last")) {
-                    //on demande à jouer le last machin
-                    if (s.contains("gauche")) {
-                        while (!trouv) {
-                            if (carte[dernier_coup.x][dernier_coup.y - i] == 'v') {
-                                y_cible = dernier_coup.y - i;
-                                trouv = true;
-                                faits.add("jouer(" + dernier_coup.x + ";" + y_cible + ")");
-                            } else {
-                                i++;
+                if (!s.contains(";")) {
+                    if (s.contains("jouer(dernier")) {
+                        System.out.println("I SHOULD NOT BE HERE");
+                        //Si on demande de jouer par rapport au dernier coup
+                        x_cible = valeur_dep_x(s.split(";")[0]);
+                        y_cible = valeur_dep_y(s.split(";")[1]);
+                        faits.add("jouer(" + x_cible + ";" + y_cible);
+                    } else if (s.contains("jouer(last")) {
+                        System.out.println("I will play last");
+                        //on demande à jouer le last machin
+                        if (s.contains("gauche")) {
+                            while (!trouv) {
+                                if (carte[dernier_coup.x][dernier_coup.y - i] == 'v') {
+                                    y_cible = dernier_coup.y - i;
+                                    trouv = true;
+                                    faits.add("jouer(" + dernier_coup.x + ";"
+                                            + y_cible + ")");
+                                } else {
+                                    i++;
+                                }
+                            }
+                        } else if (s.contains("haut")) {
+                            while (!trouv) {
+                                if (carte[dernier_coup.x + i][dernier_coup.y] == 'v') {
+                                    x_cible = dernier_coup.x + i;
+                                    trouv = true;
+                                    faits.add("jouer(" + x_cible + ";"
+                                            + dernier_coup.y + ")");
+                                } else {
+                                    i++;
+                                }
+                            }
+                        } else if (s.contains("bas")) {
+                            while (!trouv) {
+                                if (carte[dernier_coup.x - i][dernier_coup.y] == 'v') {
+                                    x_cible = dernier_coup.x - i;
+                                    trouv = true;
+                                    faits.add("jouer(" + x_cible + ";"
+                                            + dernier_coup.y + ")");
+                                } else {
+                                    i++;
+                                }
                             }
                         }
-                    } else if (s.contains("haut")) {
-                        while (!trouv) {
-                            if (carte[dernier_coup.x + i][dernier_coup.y] == 'v') {
-                                x_cible = dernier_coup.x + i;
+
+                    } else {// traiter le code jouer(aleatoire)
+                        Iterator<String> iterator = faits.iterator();
+                        while (iterator.hasNext() && !trouv) {
+                            String element = (String) iterator.next();
+                            if (element.matches("inconnu(.*;.*)")) {
                                 trouv = true;
-                                faits.add("jouer(" + x_cible + ";" + dernier_coup.y + ")");
-                            } else {
-                                i++;
+                                x_cible = Integer.parseInt(element.substring(8, element.length() - 1)
+                                        .split(";")[0]);
+                                y_cible = Integer.parseInt(element.split(";")[1].replace(")", ""));
+                                faits.add("jouer(" + x_cible + ";" + y_cible
+                                        + ")");
                             }
-                        }
-                    } else if (s.contains("bas")) {
-                        while (!trouv) {
-                            if (carte[dernier_coup.x - i][dernier_coup.y] == 'v') {
-                                x_cible = dernier_coup.x - i;
-                                trouv = true;
-                                faits.add("jouer(" + x_cible + ";" + dernier_coup.y + ")");
-                            } else {
-                                i++;
-                            }
+
                         }
                     }
-
-                }else{// traiter le code jouer(aleatoire)
-                	Iterator iterator = faits.iterator();
-                	while(iterator.hasNext()&&!trouv){
-                		String element = (String) iterator.next();
-                		if(element.matches("inconnu(.*;.*)")){
-                			trouv = true;
-                			x_cible = Integer.parseInt(element.substring(7, element.length()-1).split(";")[0]);
-                			y_cible = Integer.parseInt(element.split(";")[1].replace(")", ""));
-                        	faits.add("jouer("+x_cible+";"+y_cible+")");
-                		}
-                		
-                	}
+                } else {
+                    faits.add(s);
                 }
-            } else { 
+            } else {
                 faits.add(s);
             }
         }
@@ -208,7 +242,7 @@ public class MoteurInference {
 
     private List<Regle> parser(String filename) {
         File f = new File(filename);
-        List<Regle> liste = new ArrayList<>();
+        List<Regle> liste = new ArrayList<Regle>();
         try {
             InputStream ips = new FileInputStream(f);
             InputStreamReader ipsr = new InputStreamReader(ips);
@@ -216,13 +250,17 @@ public class MoteurInference {
             String ligne;
             while ((ligne = br.readLine()) != null) {
                 //on vérifie que la ligne ne soit pas un commentaire
-                if (ligne.charAt(0) != '#') {
+                if (!ligne.contains("#")) {
                     Regle regle = new Regle();
                     String[] ligneSpliter = ligne.split("=>");
                     String listeFait = ligneSpliter[0].replace(" ", "");
                     for (String s : listeFait.split(",")) {
                         if (!s.equals("")) //Ajouter pour permettre un coup aléatoire
                             regle.addPremisse(s);
+                    }
+                    if (ligneSpliter.length == 1) {
+                        System.out.println(ligne);
+                        System.out.println(ligne.contains("#"));
                     }
                     String listeConseq = ligneSpliter[1].replace(" ", "");
                     for (String s : listeConseq.split(",")) {
@@ -235,7 +273,7 @@ public class MoteurInference {
             return liste;
 
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
 
         return liste;

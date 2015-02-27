@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -13,9 +12,10 @@ public class Regle {
         consequences = new ArrayList<String>();
     }
 
-    public Regle(Regle r) {
+    public Regle(Regle r, int dernierX, int dernierY) {
         premisses = new ArrayList<String>(r.premisses);
         consequences = new ArrayList<String>(r.consequences);
+        adapteAuDernierPoint(dernierX, dernierY);
     }
 
     public void addPremisse(String fait) {
@@ -92,4 +92,16 @@ public class Regle {
         }
     }
 
+    public String toString() {
+        String res = "";
+        for(int i = 0; i < premisses.size(); ++i) {
+            res += premisses.get(i) + " ";
+        }
+        res += "=>";
+        for(int i = 0; i < consequences.size(); ++i) {
+            res += consequences.get(i) + " ";
+        }
+        
+        return res;
+    }
 }
