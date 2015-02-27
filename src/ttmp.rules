@@ -30,9 +30,9 @@ bateau(dernierX;dernierY;fffff), inconnu(dernierX;dernierY+1), non_bateau(dernie
 inconnu(xxx;yyy), non_inconnu(xxx+1;yyy) => last_gauche_inconnu(xxx+1;yyy)
 inconnu(xxx;yyy), non_inconnu(xxx;yyy-1) => last_haut_inconnu(xxx;yyy-1)
 inconnu(xxx;yyy), non_inconnu(xxx;yyy+1) => last_bas_inconnu(xxx;yyy+1)
-last_gauche_inconnu(xxx;yyy), bateau(xxx;yyy;t), bateau(xxx+1;yyy;t) => last_gauche_inconnu(xxx+1;yyy)
-last_haut_inconnu(xxx;yyy), bateau(xxx;yyy;t), bateau(xxx;yyy+1;t) => last_haut_inconnu(xxx;yyy+1)
-last_bas_inconnu(xxx;yyy), bateau(xxx;yyy;t), bateau(xxx;yyy-1;t) => last_bas_inconnu(xxx;yyy-1)
+last_gauche_inconnu(xxx;yyy), bateau(xxx;yyy;fffff), bateau(xxx+1;yyy;fffff) => last_gauche_inconnu(xxx+1;yyy)
+last_haut_inconnu(xxx;yyy), bateau(xxx;yyy;fffff), bateau(xxx;yyy+1;fffff) => last_haut_inconnu(xxx;yyy+1)
+last_bas_inconnu(xxx;yyy), bateau(xxx;yyy;fffff), bateau(xxx;yyy-1;fffff) => last_bas_inconnu(xxx;yyy-1)
 ##############Traque##############
 ##traque à gauche##
 bateau(dernierX;dernierY;fffff), non_bateau(dernierX+1;dernierY), bateau(dernierX-1;dernierY;fffff), last_gauche_inconnu(dernierX;dernierY) => jouer(last_gauche)
