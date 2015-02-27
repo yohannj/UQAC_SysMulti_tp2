@@ -1,13 +1,7 @@
-import java.awt.Point;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
 
 public class Regle {
 
@@ -75,26 +69,33 @@ public class Regle {
      */
     public void adapteAuDernierPoint(int dernierX, int dernierY) {
         for (int i = 0; i < premisses.size(); ++i) {
-            premisses.set(i, premisses.get(i).replaceAll("dernierX", ""
-                    + dernierX));
-            premisses.set(i, premisses.get(i).replaceAll("dernierY", ""
-                    + dernierY));
+            premisses.set(i, premisses.get(i).replace("dernierX+1", ""
+                    + (dernierX + 1)));
+            premisses.set(i, premisses.get(i).replace("dernierY+1", ""
+                    + (dernierY + 1)));
+            premisses.set(i, premisses.get(i).replace("dernierX-1", ""
+                    + (dernierX - 1)));
+            premisses.set(i, premisses.get(i).replace("dernierY-1", ""
+                    + (dernierY - 1)));
+            premisses.set(i, premisses.get(i)
+                    .replace("dernierX", "" + dernierX));
+            premisses.set(i, premisses.get(i)
+                    .replace("dernierY", "" + dernierY));
         }
-        for (int i = 0; i < premisses.size(); ++i) {
-            consequences.set(i, consequences.get(i).replaceAll("dernierX", ""
-                    + dernierX));
-            consequences.set(i, consequences.get(i).replaceAll("dernierY", ""
-                    + dernierY));
+        for (int i = 0; i < consequences.size(); ++i) {
+            consequences.set(i, consequences.get(i).replace("dernierX+1", ""
+                    + (dernierX + 1)));
+            consequences.set(i, consequences.get(i).replace("dernierY+1", ""
+                    + (dernierY + 1)));
+            consequences.set(i, consequences.get(i).replace("dernierX-1", ""
+                    + (dernierX - 1)));
+            consequences.set(i, consequences.get(i).replace("dernierY-1", ""
+                    + (dernierY - 1)));
+            consequences.set(i, consequences.get(i)
+                    .replace("dernierX", "" + dernierX));
+            consequences.set(i, consequences.get(i)
+                    .replace("dernierY", "" + dernierY));
         }
     }
 
-    private int calcString(String s) { //TODO utiliser dans adapteAuDernierPoint
-        ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
-        try {
-            return (int) engine.eval(s);
-        } catch (ScriptException e) {
-            e.printStackTrace();
-            return -1;
-        }
-    }
 }
